@@ -38,7 +38,6 @@ jobs:
       - name: Expira caches antigos (pega aditivos e mudanças cadastrais)
         run: |
           mkdir -p data/raw/cnpj data/raw/pncp_detalhes/termos
-          find data/raw/pncp_detalhes/termos -name '*.json' -mtime +21 -delete
           find data/raw/cnpj -name '*.json' -mtime +60 -delete
 
       - name: TSE 2024 (só se não estiver em cache)

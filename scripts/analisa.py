@@ -237,6 +237,9 @@ for c in contratos:
             cat = "obras" if (c.get("categoriaProcesso") or {}).get("nome", "") in ("Obras", "Serviços de Engenharia") else "outros"
             dispensas.setdefault((doc, assin.year, cat), []).append(c)
     termos = detalhe("termos", ctrl)
+    sem_atualizacao = (c.get("dataAtualizacaoGlobal") or "")[:16] <= (c.get("dataAtualizacao") or "")[:16]
+    if termos is None and sem_atualizacao:
+        termos = []  # nenhuma atualização após a publicação: não há aditivos a buscar
     if termos is not None:
         feitas.add("aditivo_acima_limite")
         acresc = sum((t.get("valorAcrescido") or 0) for t in termos if t.get("qualificacaoAcrescimoSupressao"))

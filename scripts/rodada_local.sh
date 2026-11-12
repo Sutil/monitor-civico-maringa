@@ -16,7 +16,6 @@ echo "== Rodada $HOJE $(date +%T)"
 
 # caches antigos expiram para captar aditivos e mudanças cadastrais
 mkdir -p data/raw/cnpj data/raw/pncp_detalhes/termos
-find data/raw/pncp_detalhes/termos -name '*.json' -mtime +21 -delete
 find data/raw/cnpj -name '*.json' -mtime +60 -delete
 
 $PY -I scripts/coleta_pncp.py 76282656000106 2025-01-01 $HOJE data/raw/contratos_prefeitura.json
