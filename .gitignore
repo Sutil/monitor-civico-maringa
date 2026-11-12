@@ -10,3 +10,4 @@ site/.astro/
 
 data/logs/
 .env.local
+__pycache__/
