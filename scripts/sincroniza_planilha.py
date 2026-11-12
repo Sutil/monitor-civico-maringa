@@ -21,13 +21,16 @@ def cliente():
     """Autenticação sem chave (Workload Identity Federation, via google-github-actions/auth)
     ou, como alternativa, chave JSON em GOOGLE_SERVICE_ACCOUNT_JSON."""
     import gspread
-    if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"):
-        import google.auth
-        creds, _ = google.auth.default(scopes=SCOPES)
-        return gspread.authorize(creds)
     if os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON"):
         return gspread.service_account_from_dict(json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"]), scopes=SCOPES)
-    return None
+    # Credenciais padrão do Google: no GitHub Actions vêm do Workload Identity Federation;
+    # no Mac, de `gcloud auth application-default login --impersonate-service-account=...`.
+    import google.auth
+    try:
+        creds, _ = google.auth.default(scopes=SCOPES)
+    except google.auth.exceptions.DefaultCredentialsError:
+        return None
+    return gspread.authorize(creds)
 
 def sheet():
     sid = os.environ.get("PLANILHA_ID")
