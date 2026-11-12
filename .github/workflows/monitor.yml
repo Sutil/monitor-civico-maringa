@@ -1,14 +1,14 @@
 name: Coleta semanal e publicação
 
 on:
-  schedule:
-    - cron: "0 6 * * 1"   # toda segunda, 03:00 em Brasília
+  # schedule:   # desativado: o PNCP é muito lento a partir dos servidores do GitHub (EUA)
+  #   - cron: "0 6 * * 1"
   workflow_dispatch:       # botão "Run workflow" para rodar manualmente
 
 permissions:
   contents: write          # para registrar o histórico das rodadas
   pages: write
-  id-token: write
+  id-token: write   # também usado pela autenticação no Google
 
 concurrency:
   group: monitor
@@ -95,21 +95,6 @@ jobs:
           git commit -m "Rodada $(date +%F)" || echo "sem mudanças"
           git pull --rebase && git push
 
-      - uses: actions/setup-node@v4
-        with: { node-version: 22 }
-      - name: Build do site
-        working-directory: site
-        env:
-          SITE: https://${{ github.repository_owner }}.github.io
-          BASE: /${{ github.event.repository.name }}
-        run: npm ci && npm run build
-      - uses: actions/upload-pages-artifact@v3
-        with: { path: site/dist }
-
-  deploy:
+  publicar:
     needs: coleta
-    runs-on: ubuntu-latest
-    environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
-    steps:
-      - id: d
-        uses: actions/deploy-pages@v4
+    uses: ./.github/workflows/publicar.yml

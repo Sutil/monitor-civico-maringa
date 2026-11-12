@@ -1,5 +1,5 @@
 {
- "gerado_em": "2026-11-12T14:00",
+ "gerado_em": "2026-11-12T14:51",
  "periodo": {
   "inicio": "2024-12-03",
   "fim": "2026-11-11"
@@ -177,28 +177,38 @@
  "por_modalidade": [
   {
    "modalidade": "Não informada",
-   "n": 1631,
-   "valor": 1719001984.399994
-  },
-  {
-   "modalidade": "Pregão - Eletrônico",
-   "n": 11,
-   "valor": 1954525.51
+   "n": 699,
+   "valor": 926652585.4500004
   },
   {
    "modalidade": "Inexigibilidade",
-   "n": 4,
-   "valor": 1271736.98
+   "n": 389,
+   "valor": 534204394.19000006
+  },
+  {
+   "modalidade": "Pregão - Eletrônico",
+   "n": 103,
+   "valor": 121854928.77999999
+  },
+  {
+   "modalidade": "Credenciamento",
+   "n": 257,
+   "valor": 83396338.39999965
   },
   {
    "modalidade": "Dispensa",
-   "n": 4,
-   "valor": 239640.06
+   "n": 101,
+   "valor": 28770746.000000004
+  },
+  {
+   "modalidade": "Concorrência - Eletrônica",
+   "n": 5,
+   "valor": 26877394.130000003
   },
   {
    "modalidade": "Concurso",
-   "n": 3,
-   "valor": 9900.0
+   "n": 99,
+   "valor": 721400.0
   }
  ],
  "top_fornecedores": [
@@ -293,32 +303,32 @@
    "valor": 14190000.0
   }
  ],
- "sinais_total": 201,
- "contratos_com_sinal": 186,
- "sem_apontamentos": 98,
+ "sinais_total": 189,
+ "contratos_com_sinal": 164,
+ "sem_apontamentos": 119,
  "status": {
-  "em_analise": 201
+  "em_analise": 189
  },
  "sinais_por_regra": [
   {
    "regra": "empresa_recente",
    "nome": "Empresa recém-aberta",
-   "n": 0
+   "n": 13
   },
   {
    "regra": "capital_incompativel",
    "nome": "Capital social baixo para o contrato",
-   "n": 118
+   "n": 73
   },
   {
    "regra": "situacao_irregular",
    "nome": "CNPJ não ativo",
-   "n": 11
+   "n": 16
   },
   {
    "regra": "doador_fornecedor",
    "nome": "Doador de campanha contratado",
-   "n": 10
+   "n": 18
   },
   {
    "regra": "candidato_socio",
@@ -333,7 +343,7 @@
   {
    "regra": "dispensa_fracionada",
    "nome": "Possível fracionamento de dispensa",
-   "n": 0
+   "n": 7
   },
   {
    "regra": "aditivo_acima_limite",
