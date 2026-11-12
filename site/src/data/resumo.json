@@ -1,5 +1,5 @@
 {
- "gerado_em": "2026-11-12T14:51",
+ "gerado_em": "2026-11-12T17:11",
  "periodo": {
   "inicio": "2024-12-03",
   "fim": "2026-11-11"
@@ -176,19 +176,24 @@
  ],
  "por_modalidade": [
   {
-   "modalidade": "Não informada",
-   "n": 699,
-   "valor": 926652585.4500004
+   "modalidade": "Inexigibilidade",
+   "n": 850,
+   "valor": 755646112.3499999
   },
   {
-   "modalidade": "Inexigibilidade",
-   "n": 389,
-   "valor": 534204394.19000006
+   "modalidade": "Concorrência - Eletrônica",
+   "n": 16,
+   "valor": 520367135.90000004
   },
   {
    "modalidade": "Pregão - Eletrônico",
-   "n": 103,
-   "valor": 121854928.77999999
+   "n": 213,
+   "valor": 224897916.48999995
+  },
+  {
+   "modalidade": "Dispensa",
+   "n": 215,
+   "valor": 115848883.81
   },
   {
    "modalidade": "Credenciamento",
@@ -196,14 +201,9 @@
    "valor": 83396338.39999965
   },
   {
-   "modalidade": "Dispensa",
-   "n": 101,
-   "valor": 28770746.000000004
-  },
-  {
-   "modalidade": "Concorrência - Eletrônica",
-   "n": 5,
-   "valor": 26877394.130000003
+   "modalidade": "Concorrência - Presencial",
+   "n": 3,
+   "valor": 21600000.0
   },
   {
    "modalidade": "Concurso",
@@ -303,11 +303,11 @@
    "valor": 14190000.0
   }
  ],
- "sinais_total": 189,
- "contratos_com_sinal": 164,
- "sem_apontamentos": 119,
+ "sinais_total": 430,
+ "contratos_com_sinal": 390,
+ "sem_apontamentos": 1263,
  "status": {
-  "em_analise": 189
+  "em_analise": 430
  },
  "sinais_por_regra": [
   {
@@ -343,12 +343,12 @@
   {
    "regra": "dispensa_fracionada",
    "nome": "Possível fracionamento de dispensa",
-   "n": 7
+   "n": 20
   },
   {
    "regra": "aditivo_acima_limite",
    "nome": "Aditivos acima de 25%",
-   "n": 30
+   "n": 258
   }
  ],
  "fontes": [

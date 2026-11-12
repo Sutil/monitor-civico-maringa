@@ -3,8 +3,8 @@
   "data": "2026-11-12",
   "contratos": 1653,
   "contratos_novos": 1653,
-  "sinais_total": 189,
-  "sinais_novos": 189,
+  "sinais_total": 430,
+  "sinais_novos": 430,
   "sinais_por_regra": [
    {
     "regra": "empresa_recente",
@@ -39,16 +39,16 @@
    {
     "regra": "dispensa_fracionada",
     "nome": "Possível fracionamento de dispensa",
-    "n": 7
+    "n": 20
    },
    {
     "regra": "aditivo_acima_limite",
     "nome": "Aditivos acima de 25%",
-    "n": 30
+    "n": 258
    }
   ],
   "status": {
-   "em_analise": 189
+   "em_analise": 430
   },
   "revisados_publicados": 0,
   "primeira_rodada": true
