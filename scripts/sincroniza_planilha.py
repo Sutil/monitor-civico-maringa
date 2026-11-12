@@ -4,8 +4,9 @@
   push: acrescenta à planilha os sinais novos de data/privado/sinais.csv (nunca altera linhas existentes)
 
 Requer:
-  GOOGLE_SERVICE_ACCOUNT_JSON  conteúdo do JSON da conta de serviço (secret do GitHub)
-  PLANILHA_ID                  ID da planilha (compartilhada com o e-mail da conta de serviço como Editor)
+  PLANILHA_ID  ID da planilha (compartilhada com a conta de serviço como Editor)
+  e uma credencial: GOOGLE_APPLICATION_CREDENTIALS (sem chave, via Workload Identity Federation
+  no GitHub Actions) ou GOOGLE_SERVICE_ACCOUNT_JSON (chave JSON; alternativa menos segura).
 Sem essas variáveis, o script não faz nada (útil para rodar localmente).
 """
 import csv, json, os, sys, pathlib
@@ -14,12 +15,26 @@ COLS = ["caso_id", "status", "justificativa", "revisor", "data_revisao", "protoc
         "regra_nome", "orgao", "fornecedor", "fornecedor_doc", "valor_global", "data_assinatura", "fato", "link_pncp",
         "contrato", "objeto", "evidencias", "detectado_em"]
 
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+
+def cliente():
+    """Autenticação sem chave (Workload Identity Federation, via google-github-actions/auth)
+    ou, como alternativa, chave JSON em GOOGLE_SERVICE_ACCOUNT_JSON."""
+    import gspread
+    if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"):
+        import google.auth
+        creds, _ = google.auth.default(scopes=SCOPES)
+        return gspread.authorize(creds)
+    if os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON"):
+        return gspread.service_account_from_dict(json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"]), scopes=SCOPES)
+    return None
+
 def sheet():
-    cred, sid = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON"), os.environ.get("PLANILHA_ID")
-    if not cred or not sid:
+    sid = os.environ.get("PLANILHA_ID")
+    gc = cliente() if sid else None
+    if not gc:
         print("Planilha não configurada; pulando."); sys.exit(0)
     import gspread
-    gc = gspread.service_account_from_dict(json.loads(cred))
     sh = gc.open_by_key(sid)
     try:
         return sh.worksheet("revisao")

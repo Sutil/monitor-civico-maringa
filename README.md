@@ -46,9 +46,10 @@ cd site && npm install && npm run dev
 ## Configurar no GitHub
 
 1. **Pages:** Settings → Pages → Source: *GitHub Actions*.
-2. **Planilha de revisão:** crie uma conta de serviço no Google Cloud (API Google Sheets ativada), compartilhe a planilha com o e-mail dela como *Editor* e cadastre os secrets:
-   - `GOOGLE_SERVICE_ACCOUNT_JSON` — conteúdo do JSON da chave
-   - `PLANILHA_ID` — o ID na URL da planilha
+2. **Planilha de revisão (sem chave secreta):** o GitHub Actions se autentica no Google via *Workload Identity Federation*, restrita ao ID deste repositório.
+   - Google Cloud: projeto com as APIs Sheets, IAM, IAM Credentials e STS; conta de serviço `robo-planilha`; pool `github` com provider OIDC (`token.actions.githubusercontent.com`) e condição `assertion.repository_id == <id do repo>`; papel `roles/iam.workloadIdentityUser` para esse repositório na conta de serviço.
+   - Compartilhe a planilha com o e-mail da conta de serviço como *Editor*.
+   - GitHub → *Variables*: `GCP_WIF_PROVIDER` (caminho completo do provider) e `GCP_SERVICE_ACCOUNT` (e-mail da conta); *Secret*: `PLANILHA_ID`.
 3. **Rodar:** Actions → *Coleta semanal e publicação* → *Run workflow*.
 4. Ajuste `site/src/config.ts` (e-mail, formulário de voluntários, repositório).
 
