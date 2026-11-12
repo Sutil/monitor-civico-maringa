@@ -16,6 +16,7 @@ PRIV = pathlib.Path(__file__).resolve().parent.parent / "data/privado"
 COLS = ["caso_id", "status", "justificativa", "revisor", "data_revisao", "protocolo", "processo_link", "resposta_orgao",
         "regra_nome", "orgao", "fornecedor", "fornecedor_doc", "valor_global", "data_assinatura", "fato", "link_pncp",
         "contrato", "objeto", "evidencias", "detectado_em"]
+ROBO_COLS = ["sinal_ativo"]
 IA_COLS = ["ia_prioridade", "ia_sugestao", "ia_resumo", "ia_explicacoes_legitimas", "ia_o_que_verificar", "ia_confianca"]
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -86,7 +87,7 @@ def push():
     ws = sheet()
     valores = ws.get_all_values()
     cab = valores[0] if valores else []
-    faltando = [c for c in COLS + IA_COLS if c not in cab]
+    faltando = [c for c in COLS + ROBO_COLS + IA_COLS if c not in cab]
     if faltando:  # cabeçalho antigo: acrescenta colunas novas ao final
         cab = cab + faltando
         if ws.col_count < len(cab):
@@ -104,7 +105,7 @@ def push():
         if r["caso_id"] in linha_de:
             continue
         linha = [""] * len(cab)
-        for c, v in {**r, **ia_valores(triagem.get(r["caso_id"]))}.items():
+        for c, v in {**r, "sinal_ativo": "sim", **ia_valores(triagem.get(r["caso_id"]))}.items():
             if c in idx:
                 linha[idx[c]] = v
         novos.append(linha)
@@ -119,8 +120,19 @@ def push():
         if n and t:
             for c, v in ia_valores(t).items():
                 upd.append({"range": rowcol_to_a1(n, idx[c] + 1), "values": [[v]]})
+    # sinais que deixaram de existir (regra corrigida ou dado mudou): marcados, nunca apagados
+    import datetime as dt
+    ativos = {r["caso_id"] for r in sinais}
+    hoje = dt.date.today().isoformat()
+    inativos = 0
+    for cid, n in linha_de.items():
+        atual = valores[n - 1][idx["sinal_ativo"]] if idx["sinal_ativo"] < len(valores[n - 1]) else ""
+        novo = "sim" if cid in ativos else (atual if atual.startswith("não") else f"não — regra revisada ou dado alterado em {hoje}")
+        inativos += cid not in ativos
+        if novo != atual:
+            upd.append({"range": rowcol_to_a1(n, idx["sinal_ativo"] + 1), "values": [[novo]]})
     if upd:
         ws.batch_update(upd, value_input_option="RAW")
-    print(f"{len(novos)} sinais novos enviados à planilha; triagem por IA atualizada em {len(upd)//len(IA_COLS)} linhas existentes")
+    print(f"{len(novos)} sinais novos enviados à planilha; {inativos} linhas marcadas como sinal inativo")
 
 {"pull": pull, "push": push}[sys.argv[1]]()

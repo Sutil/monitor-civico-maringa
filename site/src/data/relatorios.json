@@ -3,8 +3,8 @@
   "data": "2026-11-12",
   "contratos": 1653,
   "contratos_novos": 1653,
-  "sinais_total": 430,
-  "sinais_novos": 430,
+  "sinais_total": 184,
+  "sinais_novos": 184,
   "sinais_por_regra": [
    {
     "regra": "empresa_recente",
@@ -44,11 +44,11 @@
    {
     "regra": "aditivo_acima_limite",
     "nome": "Aditivos acima de 25%",
-    "n": 258
+    "n": 12
    }
   ],
   "status": {
-   "em_analise": 430
+   "em_analise": 184
   },
   "revisados_publicados": 0,
   "primeira_rodada": true

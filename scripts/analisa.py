@@ -73,7 +73,7 @@ REGRAS = {
     },
     "aditivo_acima_limite": {
         "nome": "Aditivos acima de 25%",
-        "desc": "Soma dos acréscimos por termo aditivo supera 25% do valor inicial (50% para obras/engenharia).",
+        "desc": "Soma dos acréscimos por termo aditivo, dentro do prazo original, supera 25% do valor inicial (50% para obras/engenharia). Renovações de prazo não entram na conta.",
         "por_que": "A Lei 14.133 (art. 125) limita acréscimos a 25% (50% em reforma). Acima disso, só com justificativa específica.",
         "fontes": ["PNCP"],
     },
@@ -242,7 +242,11 @@ for c in contratos:
         termos = []  # nenhuma atualização após a publicação: não há aditivos a buscar
     if termos is not None:
         feitas.add("aditivo_acima_limite")
-        acresc = sum((t.get("valorAcrescido") or 0) for t in termos if t.get("qualificacaoAcrescimoSupressao"))
+        # Só acréscimos de quantidade/valor DENTRO do prazo original. Renovações (termo que estende a vigência)
+        # não entram no limite do art. 125: a prefeitura registra prorrogações anuais como "acréscimo".
+        fim_original = c.get("dataVigenciaFim") or ""
+        acresc = sum((t.get("valorAcrescido") or 0) for t in termos
+                     if t.get("qualificacaoAcrescimoSupressao") and not (t.get("dataVigenciaFim") or "") > fim_original)
         ini_v = c.get("valorInicial") or 0
         lim = 0.50 if (c.get("categoriaProcesso") or {}).get("nome") in ("Obras", "Serviços de Engenharia") else 0.25
         if ini_v > 0 and acresc > lim * ini_v:

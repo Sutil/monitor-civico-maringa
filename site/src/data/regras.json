@@ -64,7 +64,7 @@
  },
  "aditivo_acima_limite": {
   "nome": "Aditivos acima de 25%",
-  "desc": "Soma dos acréscimos por termo aditivo supera 25% do valor inicial (50% para obras/engenharia).",
+  "desc": "Soma dos acréscimos por termo aditivo, dentro do prazo original, supera 25% do valor inicial (50% para obras/engenharia). Renovações de prazo não entram na conta.",
   "por_que": "A Lei 14.133 (art. 125) limita acréscimos a 25% (50% em reforma). Acima disso, só com justificativa específica.",
   "fontes": [
    "PNCP"

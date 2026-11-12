@@ -1,5 +1,5 @@
 {
- "gerado_em": "2026-11-12T17:11",
+ "gerado_em": "2026-11-12T17:12",
  "periodo": {
   "inicio": "2024-12-03",
   "fim": "2026-11-11"
@@ -303,11 +303,11 @@
    "valor": 14190000.0
   }
  ],
- "sinais_total": 430,
- "contratos_com_sinal": 390,
- "sem_apontamentos": 1263,
+ "sinais_total": 184,
+ "contratos_com_sinal": 170,
+ "sem_apontamentos": 1483,
  "status": {
-  "em_analise": 430
+  "em_analise": 184
  },
  "sinais_por_regra": [
   {
@@ -348,7 +348,7 @@
   {
    "regra": "aditivo_acima_limite",
    "nome": "Aditivos acima de 25%",
-   "n": 258
+   "n": 12
   }
  ],
  "fontes": [
