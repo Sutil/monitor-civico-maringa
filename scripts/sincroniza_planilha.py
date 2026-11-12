@@ -24,7 +24,26 @@ def sheet():
     try:
         return sh.worksheet("revisao")
     except gspread.WorksheetNotFound:
-        ws = sh.add_worksheet("revisao", rows=1000, cols=len(COLS)); ws.append_row(COLS); return ws
+        ws = sh.add_worksheet("revisao", rows=1000, cols=len(COLS))
+        ws.append_row(COLS)
+        prepara(sh, ws)
+        return ws
+
+STATUS = ["em_analise", "sem_apontamentos", "ponto_de_atencao", "esclarecimento_solicitado",
+          "encaminhado", "apuracao_oficial", "esclarecido"]
+
+def prepara(sh, ws):
+    """Cabeçalho fixo em negrito e lista suspensa de status (coluna B)."""
+    sid = ws.id
+    sh.batch_update({"requests": [
+        {"updateSheetProperties": {"properties": {"sheetId": sid, "gridProperties": {"frozenRowCount": 1, "frozenColumnCount": 1}},
+                                   "fields": "gridProperties.frozenRowCount,gridProperties.frozenColumnCount"}},
+        {"repeatCell": {"range": {"sheetId": sid, "startRowIndex": 0, "endRowIndex": 1},
+                        "cell": {"userEnteredFormat": {"textFormat": {"bold": True}}}, "fields": "userEnteredFormat.textFormat.bold"}},
+        {"setDataValidation": {"range": {"sheetId": sid, "startRowIndex": 1, "startColumnIndex": 1, "endColumnIndex": 2},
+                               "rule": {"condition": {"type": "ONE_OF_LIST", "values": [{"userEnteredValue": s} for s in STATUS]},
+                                        "strict": True, "showCustomUi": True}}},
+    ]})
 
 def pull():
     rows = sheet().get_all_records()
