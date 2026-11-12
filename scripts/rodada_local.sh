@@ -29,6 +29,15 @@ $PY -I scripts/coleta_detalhes.py data/raw/contratos_prefeitura.json data/raw/co
 
 $PY -I scripts/sincroniza_planilha.py pull
 $PY -I scripts/analisa.py
+# Triagem por IA: chave da Anthropic guardada no Chaves do macOS (nunca em arquivo)
+ANTHROPIC_API_KEY=$(security find-generic-password -s monitor-civico-anthropic -w 2>/dev/null || true)
+if [ -n "$ANTHROPIC_API_KEY" ]; then
+  ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" $PY -I scripts/triagem_ia.py --max 300
+else
+  echo "Sem chave da Anthropic no Chaves (monitor-civico-anthropic); triagem por IA pulada."
+  $PY -I scripts/triagem_ia.py --max 0
+fi
+unset ANTHROPIC_API_KEY
 $PY -I scripts/sincroniza_planilha.py push
 
 git add data/processed/historico site/src/data

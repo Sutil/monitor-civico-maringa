@@ -1,7 +1,9 @@
 """Sincroniza sinais com a planilha Google de revisão (privada).
 
   pull: baixa a aba 'revisao' para data/privado/revisao.csv (lida pelo analisa.py)
-  push: acrescenta à planilha os sinais novos de data/privado/sinais.csv (nunca altera linhas existentes)
+  push: acrescenta à planilha os sinais novos de data/privado/sinais.csv e preenche as colunas da
+        triagem por IA (ia_*). Colunas de voluntários NUNCA são alteradas em linhas existentes.
+        As colunas são localizadas pelo nome do cabeçalho, então voluntários podem reordená-las.
 
 Requer:
   PLANILHA_ID  ID da planilha (compartilhada com a conta de serviço como Editor)
@@ -14,6 +16,7 @@ PRIV = pathlib.Path(__file__).resolve().parent.parent / "data/privado"
 COLS = ["caso_id", "status", "justificativa", "revisor", "data_revisao", "protocolo", "processo_link", "resposta_orgao",
         "regra_nome", "orgao", "fornecedor", "fornecedor_doc", "valor_global", "data_assinatura", "fato", "link_pncp",
         "contrato", "objeto", "evidencias", "detectado_em"]
+IA_COLS = ["ia_prioridade", "ia_sugestao", "ia_resumo", "ia_explicacoes_legitimas", "ia_o_que_verificar", "ia_confianca"]
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
@@ -70,12 +73,54 @@ def pull():
         w = csv.DictWriter(f, fieldnames=COLS, extrasaction="ignore"); w.writeheader(); w.writerows(rows)
     print(f"{len(rows)} linhas de revisão baixadas")
 
+def ia_valores(t):
+    if not t:
+        return {c: "" for c in IA_COLS}
+    lista = lambda xs: "\n".join(f"• {x}" for x in xs)
+    return {"ia_prioridade": t["prioridade"], "ia_sugestao": t["sugestao"].replace("_", " "), "ia_resumo": t["resumo"],
+            "ia_explicacoes_legitimas": lista(t["explicacoes_legitimas"]), "ia_o_que_verificar": lista(t["o_que_verificar"]),
+            "ia_confianca": t["confianca"]}
+
 def push():
+    from gspread.utils import rowcol_to_a1
     ws = sheet()
-    existentes = set(ws.col_values(1)[1:])
-    novos = [r for r in csv.DictReader((PRIV / "sinais.csv").open(encoding="utf-8")) if r["caso_id"] not in existentes]
+    valores = ws.get_all_values()
+    cab = valores[0] if valores else []
+    faltando = [c for c in COLS + IA_COLS if c not in cab]
+    if faltando:  # cabeçalho antigo: acrescenta colunas novas ao final
+        cab = cab + faltando
+        if ws.col_count < len(cab):
+            ws.add_cols(len(cab) - ws.col_count)
+        ws.update(range_name="A1", values=[cab])
+    idx = {c: i for i, c in enumerate(cab)}
+    linha_de = {r[idx["caso_id"]]: n for n, r in enumerate(valores[1:], start=2) if r and r[idx["caso_id"]]}
+
+    triagem_f = PRIV / "triagem.json"
+    triagem = json.loads(triagem_f.read_text()) if triagem_f.exists() else {}
+    sinais = list(csv.DictReader((PRIV / "sinais.csv").open(encoding="utf-8")))
+
+    novos = []
+    for r in sinais:
+        if r["caso_id"] in linha_de:
+            continue
+        linha = [""] * len(cab)
+        for c, v in {**r, **ia_valores(triagem.get(r["caso_id"]))}.items():
+            if c in idx:
+                linha[idx[c]] = v
+        novos.append(linha)
     if novos:
-        ws.append_rows([[r.get(c, "") for c in COLS] for r in novos], value_input_option="RAW")
-    print(f"{len(novos)} sinais novos enviados à planilha")
+        ws.append_rows(novos, value_input_option="RAW")
+
+    # linhas existentes: atualiza SOMENTE as colunas ia_*
+    upd = []
+    for r in sinais:
+        n = linha_de.get(r["caso_id"])
+        t = triagem.get(r["caso_id"])
+        if n and t:
+            for c, v in ia_valores(t).items():
+                upd.append({"range": rowcol_to_a1(n, idx[c] + 1), "values": [[v]]})
+    if upd:
+        ws.batch_update(upd, value_input_option="RAW")
+    print(f"{len(novos)} sinais novos enviados à planilha; triagem por IA atualizada em {len(upd)//len(IA_COLS)} linhas existentes")
 
 {"pull": pull, "push": push}[sys.argv[1]]()

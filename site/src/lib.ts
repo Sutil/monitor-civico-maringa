@@ -9,7 +9,7 @@ export const url = (p: string) => `${import.meta.env.BASE_URL.replace(/\/$/, '')
 
 export const STATUS = {
   sem_apontamentos: { nome: 'Sem apontamentos', desc: 'Passou nas verificações automáticas realizadas.', cor: 'ok' },
-  em_analise: { nome: 'Em análise', desc: 'Sinal automático aguardando revisão de um voluntário. Detalhes não são publicados antes da revisão.', cor: 'neutro' },
+  em_analise: { nome: 'Em análise', desc: 'Sinal automático em triagem por IA ou aguardando o veredito de um voluntário. Detalhes não são publicados antes da revisão humana.', cor: 'neutro' },
   ponto_de_atencao: { nome: 'Ponto de atenção', desc: 'Revisado por voluntário: fato objetivo que merece explicação do órgão.', cor: 'atencao' },
   esclarecimento_solicitado: { nome: 'Esclarecimento solicitado', desc: 'Pedido formal feito ao órgão (LAI ou ofício), aguardando resposta.', cor: 'atencao' },
   encaminhado: { nome: 'Encaminhado a órgão de controle', desc: 'Representação protocolada no TCE-PR, MP ou CGU.', cor: 'alerta' },

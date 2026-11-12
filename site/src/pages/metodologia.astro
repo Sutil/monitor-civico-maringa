@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import StatusBadge from '../components/StatusBadge.astro';
 import regras from '../data/regras.json';
 import resumo from '../data/resumo.json';
+import triagem from '../data/triagem.json';
 import { brl, data, STATUS, type StatusId } from '../lib';
 import { CONTATO } from '../config';
 const lista = Object.entries(regras).filter(([k]) => !k.startsWith('_')) as [string, any][];
@@ -10,14 +11,19 @@ const lim = (regras as any)._limite_dispensa;
 ---
 <Base title="Metodologia" description="Como o Monitor Cívico Maringá coleta dados, gera sinais e revisa casos.">
   <h1>Metodologia</h1>
-  <p>O monitor é totalmente automatizado na coleta e totalmente humano na conclusão. Um robô coleta dados oficiais toda semana e aplica verificações objetivas.
-    Cada sinal gerado é revisado por um voluntário antes de qualquer detalhe ser publicado.</p>
+  <p>A análise é <strong>híbrida</strong>: automação na coleta, inteligência artificial na triagem e <strong>veredito sempre humano</strong>.
+    Um robô coleta dados oficiais toda semana e aplica verificações objetivas; uma IA organiza cada sinal para que os voluntários
+    comecem pelos casos mais relevantes; e só uma pessoa decide o que é publicado.</p>
 
   <h2>Como funciona</h2>
   <ol>
     <li><strong>Coleta semanal</strong> de contratos, licitações e aditivos no PNCP; dados cadastrais de fornecedores na Receita Federal; doações e despesas de campanha no TSE.</li>
     <li><strong>Verificações automáticas</strong> (abaixo) geram sinais com status <em>Em análise</em>. Nesta fase, o público vê apenas a contagem.</li>
-    <li><strong>Revisão humana</strong>: um voluntário confere o fato nas fontes oficiais, registra a justificativa e muda o status.</li>
+    <li><strong>Triagem por IA</strong>: um modelo de linguagem ({triagem.modelo}) lê os fatos de cada sinal e prepara, para uso interno: prioridade, resumo,
+      explicações legítimas possíveis (ex.: credenciamento, consórcio público) e o que verificar em cada fonte. A IA <strong>não muda status, não publica e não acusa</strong>;
+      ela pode errar, por isso tudo o que sugere é conferido.</li>
+    <li><strong>Veredito humano</strong>: um voluntário confere o fato nas fontes oficiais, registra a justificativa, assina e muda o status.
+      Mesmo os casos que a IA considera prováveis falsos positivos só são encerrados com confirmação humana.</li>
     <li><strong>Contraditório</strong>: antes de publicar um <em>Ponto de atenção</em>, o órgão é consultado e sua resposta é publicada junto.</li>
   </ol>
 
@@ -36,6 +42,13 @@ const lim = (regras as any)._limite_dispensa;
   <div class="card table-scroll"><table><tbody>
     {(Object.keys(STATUS) as StatusId[]).map((s) => <tr><td><StatusBadge status={s} /></td><td>{STATUS[s].desc}</td></tr>)}
   </tbody></table></div>
+
+  <h2>Sobre o uso de inteligência artificial</h2>
+  <ul>
+    <li>A IA recebe apenas dados públicos (contratos, CNPJs, doações eleitorais), com CPFs mascarados.</li>
+    <li>As análises da IA não são publicadas; servem para organizar o trabalho dos voluntários.</li>
+    <li>Quando a IA erra de forma recorrente, corrigimos a regra automática ou as instruções da triagem.</li>
+  </ul>
 
   <h2>Privacidade (LGPD)</h2>
   <p>Publicamos apenas dados já públicos e de interesse público. CPFs de pessoas físicas são sempre mascarados (ex.: ***.456.789-**).

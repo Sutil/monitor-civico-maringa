@@ -1,0 +1,7 @@
+{
+ "triados": 0,
+ "aguardando_triagem": 0,
+ "prioridade": {"alta": 0, "media": 0, "baixa": 0},
+ "sugestao": {"merece_revisao": 0, "provavel_falso_positivo": 0},
+ "modelo": "claude-opus-5-5"
+}

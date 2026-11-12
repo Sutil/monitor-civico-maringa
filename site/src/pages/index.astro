@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import StatusBadge from '../components/StatusBadge.astro';
 import resumo from '../data/resumo.json';
+import triagem from '../data/triagem.json';
 import { brl, mi, num, data, url, STATUS, type StatusId } from '../lib';
 
 const st = resumo.status as Record<string, number>;
@@ -28,7 +29,15 @@ const cats = resumo.por_categoria.map((c) => ({ ...c, valor_mi: c.valor / 1e6 })
 
   <h2>Situação das análises</h2>
   <p class="muted">As verificações automáticas geraram <strong>{num(resumo.sinais_total)} sinais</strong> em {num(resumo.contratos_com_sinal)} contratos.
-    Um sinal não é uma acusação: é um fato objetivo que pede verificação. Os detalhes só são publicados <strong>depois da revisão de um voluntário</strong>.</p>
+    Um sinal não é uma acusação: é um fato objetivo que pede verificação. A análise é híbrida — <strong>a IA faz a triagem, uma pessoa dá o veredito</strong> —
+    e os detalhes só são publicados depois da revisão humana.</p>
+
+  <div class="grid" style="margin-bottom:1rem">
+    <div class="card stat"><div class="v">{num(resumo.sinais_total)}</div><div class="l">1 · sinais automáticos</div></div>
+    <div class="card stat"><div class="v">{num(triagem.triados)}</div><div class="l">2 · triados pela IA</div></div>
+    <div class="card stat"><div class="v">{num(triagem.prioridade.alta + triagem.prioridade.media)}</div><div class="l">priorizados para revisão humana (alta e média)</div></div>
+    <div class="card stat"><div class="v">{num(revisados)}</div><div class="l">3 · com veredito humano</div></div>
+  </div>
   <div class="card">
     <div class="table-scroll">
       <table>

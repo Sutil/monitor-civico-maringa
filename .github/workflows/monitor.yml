@@ -81,9 +81,11 @@ jobs:
       - name: Revisões da planilha → regras → novos sinais para a planilha
         env:
           PLANILHA_ID: ${{ secrets.PLANILHA_ID }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           python scripts/sincroniza_planilha.py pull
           python scripts/analisa.py
+          python scripts/triagem_ia.py --max 300
           python scripts/sincroniza_planilha.py push
 
       - name: Registra histórico da rodada (só contagens e IDs, sem detalhes)
