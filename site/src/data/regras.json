@@ -1,0 +1,77 @@
+{
+ "empresa_recente": {
+  "nome": "Empresa recém-aberta",
+  "desc": "Fornecedor com CNPJ aberto há menos de 180 dias na data de assinatura do contrato.",
+  "por_que": "Empresas criadas pouco antes de contratar com o poder público podem indicar empresa de fachada ou direcionamento — mas também podem ser negócios legítimos novos.",
+  "fontes": [
+   "PNCP",
+   "Receita Federal"
+  ]
+ },
+ "capital_incompativel": {
+  "nome": "Capital social baixo para o contrato",
+  "desc": "Empresa com capital social inferior a 10% do valor do contrato, em contratos acima de R$ 200 mil.",
+  "por_que": "Pode indicar baixa capacidade econômica para executar o contrato. Capital social é declaratório e nem sempre reflete a capacidade real.",
+  "fontes": [
+   "PNCP",
+   "Receita Federal"
+  ]
+ },
+ "situacao_irregular": {
+  "nome": "CNPJ não ativo",
+  "desc": "Fornecedor com situação cadastral diferente de 'Ativa' na Receita Federal na data da verificação.",
+  "por_que": "Empresas baixadas, inaptas ou suspensas não deveriam manter contratos ativos.",
+  "fontes": [
+   "Receita Federal"
+  ]
+ },
+ "doador_fornecedor": {
+  "nome": "Doador de campanha contratado",
+  "desc": "A empresa, ou um de seus sócios, doou para campanha de candidato em Maringá em 2024.",
+  "por_que": "Doação não é ilegal, mas a relação entre financiamento de campanha e contratos públicos merece acompanhamento.",
+  "fontes": [
+   "PNCP",
+   "Receita Federal",
+   "TSE"
+  ]
+ },
+ "candidato_socio": {
+  "nome": "Candidato é sócio ou fornecedor",
+  "desc": "Candidato das eleições municipais de 2024 em Maringá aparece como sócio da empresa contratada, ou é o próprio fornecedor pessoa física.",
+  "por_que": "Agentes eleitos têm restrições para contratar com o município (CF art. 54 e Lei Orgânica). Para candidatos não eleitos, não há impedimento.",
+  "fontes": [
+   "PNCP",
+   "Receita Federal",
+   "TSE"
+  ]
+ },
+ "fornecedor_campanha": {
+  "nome": "Fornecedor de campanha contratado",
+  "desc": "Empresa que prestou serviços a campanhas em Maringá em 2024 e depois foi contratada pelo órgão.",
+  "por_que": "Relação comercial prévia com campanhas pode merecer atenção, especialmente em contratações sem licitação.",
+  "fontes": [
+   "PNCP",
+   "TSE"
+  ]
+ },
+ "dispensa_fracionada": {
+  "nome": "Possível fracionamento de dispensa",
+  "desc": "Mesmo fornecedor com várias contratações por dispensa no mesmo ano e categoria, cuja soma passa do limite legal de dispensa por valor.",
+  "por_que": "Dividir uma compra em partes menores para evitar licitação é vedado (Lei 14.133, art. 75, §1º). Pode haver justificativa legítima.",
+  "fontes": [
+   "PNCP"
+  ]
+ },
+ "aditivo_acima_limite": {
+  "nome": "Aditivos acima de 25%",
+  "desc": "Soma dos acréscimos por termo aditivo supera 25% do valor inicial (50% para obras/engenharia).",
+  "por_que": "A Lei 14.133 (art. 125) limita acréscimos a 25% (50% em reforma). Acima disso, só com justificativa específica.",
+  "fontes": [
+   "PNCP"
+  ]
+ },
+ "_limite_dispensa": {
+  "obras": 125451.15,
+  "outros": 62725.59
+ }
+}

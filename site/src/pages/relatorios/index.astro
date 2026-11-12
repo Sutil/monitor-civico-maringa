@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+import relatorios from '../../data/relatorios.json';
+import { num, data, url } from '../../lib';
+---
+<Base title="Relatórios" description="Relatórios semanais das análises do Monitor Cívico Maringá.">
+  <h1>Relatórios das análises</h1>
+  <p class="muted">A cada rodada semanal publicamos o que entrou, o que foi sinalizado e o que foi revisado.</p>
+  <div class="card table-scroll">
+    <table>
+      <thead><tr><th>Rodada</th><th class="n">Contratos</th><th class="n">Novos</th><th class="n">Sinais</th><th class="n">Novos sinais</th><th class="n">Publicados</th></tr></thead>
+      <tbody>
+        {relatorios.map((r: any) => (
+          <tr><td><a href={url(`relatorios/${r.data}/`)}>{data(r.data)}</a></td><td class="n">{num(r.contratos)}</td><td class="n">{num(r.contratos_novos)}</td>
+            <td class="n">{num(r.sinais_total)}</td><td class="n">{num(r.sinais_novos)}</td><td class="n">{num(r.revisados_publicados)}</td></tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</Base>

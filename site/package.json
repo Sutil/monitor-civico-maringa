@@ -1,0 +1,19 @@
+{
+  "name": "site",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && pagefind --site dist",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@observablehq/plot": "^0.6.19",
+    "astro": "^7.4.11",
+    "pagefind": "^1.6.0"
+  }
+}

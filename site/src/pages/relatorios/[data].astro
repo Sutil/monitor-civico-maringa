@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import relatorios from '../../data/relatorios.json';
+import { num, data, url, type StatusId } from '../../lib';
+export function getStaticPaths() {
+  return relatorios.map((r: any) => ({ params: { data: r.data }, props: { r } }));
+}
+const { r } = Astro.props as { r: any };
+---
+<Base title={`Relatório de ${data(r.data)}`}>
+  <p class="small"><a href={url('relatorios/')}>← Todos os relatórios</a></p>
+  <h1>Relatório de {data(r.data)}</h1>
+  {r.primeira_rodada && <p class="notice">Primeira rodada do monitor: todos os contratos do período foram analisados pela primeira vez.</p>}
+  <div class="grid" style="margin-top:1rem">
+    <div class="card stat"><div class="v">{num(r.contratos)}</div><div class="l">contratos na base</div></div>
+    <div class="card stat"><div class="v">{num(r.contratos_novos)}</div><div class="l">contratos novos nesta rodada</div></div>
+    <div class="card stat"><div class="v">{num(r.sinais_novos)}</div><div class="l">sinais novos</div></div>
+    <div class="card stat"><div class="v">{num(r.revisados_publicados)}</div><div class="l">casos revisados e publicados</div></div>
+  </div>
+  <h2>Sinais por verificação</h2>
+  <div class="card table-scroll"><table><tbody>
+    {r.sinais_por_regra.map((x: any) => <tr><td><a href={url(`metodologia/#${x.regra}`)}>{x.nome}</a></td><td class="n">{num(x.n)}</td></tr>)}
+  </tbody></table></div>
+  <h2>Status</h2>
+  <div class="card table-scroll"><table><tbody>
+    {Object.entries(r.status).map(([s, n]) => <tr><td><StatusBadge status={s as StatusId} /></td><td class="n">{num(n as number)}</td></tr>)}
+  </tbody></table></div>
+</Base>

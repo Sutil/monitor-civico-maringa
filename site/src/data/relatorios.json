@@ -1,0 +1,56 @@
+[
+ {
+  "data": "2026-11-12",
+  "contratos": 1653,
+  "contratos_novos": 1653,
+  "sinais_total": 201,
+  "sinais_novos": 201,
+  "sinais_por_regra": [
+   {
+    "regra": "empresa_recente",
+    "nome": "Empresa recém-aberta",
+    "n": 0
+   },
+   {
+    "regra": "capital_incompativel",
+    "nome": "Capital social baixo para o contrato",
+    "n": 118
+   },
+   {
+    "regra": "situacao_irregular",
+    "nome": "CNPJ não ativo",
+    "n": 11
+   },
+   {
+    "regra": "doador_fornecedor",
+    "nome": "Doador de campanha contratado",
+    "n": 10
+   },
+   {
+    "regra": "candidato_socio",
+    "nome": "Candidato é sócio ou fornecedor",
+    "n": 0
+   },
+   {
+    "regra": "fornecedor_campanha",
+    "nome": "Fornecedor de campanha contratado",
+    "n": 32
+   },
+   {
+    "regra": "dispensa_fracionada",
+    "nome": "Possível fracionamento de dispensa",
+    "n": 0
+   },
+   {
+    "regra": "aditivo_acima_limite",
+    "nome": "Aditivos acima de 25%",
+    "n": 30
+   }
+  ],
+  "status": {
+   "em_analise": 201
+  },
+  "revisados_publicados": 0,
+  "primeira_rodada": true
+ }
+]

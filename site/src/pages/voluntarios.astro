@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import resumo from '../data/resumo.json';
+import { num, mi } from '../lib';
+import { CONTATO } from '../config';
+const emAnalise = (resumo.status as Record<string, number>).em_analise ?? 0;
+---
+<Base title="Seja voluntário" description="Ajude a fiscalizar os contratos públicos de Maringá. Não precisa ser especialista.">
+  <h1>Ajude a fiscalizar o dinheiro público de Maringá</h1>
+  <p style="font-size:1.1rem">O robô já analisou <strong>{mi(resumo.valor_total)}</strong> em {num(resumo.contratos)} contratos e encontrou
+    <strong>{num(emAnalise)} sinais que precisam de olhos humanos</strong>. Sem voluntários, eles ficam parados.</p>
+
+  <div class="grid" style="margin:1.5rem 0">
+    <div class="card"><h3>Revisor de casos</h3><p class="muted">Confere um sinal nas fontes oficiais e registra o que encontrou. Treinamento de 1 hora; cerca de 20 minutos por caso.</p></div>
+    <div class="card"><h3>Pedidos de informação</h3><p class="muted">Redige e acompanha pedidos pela Lei de Acesso à Informação ao município.</p></div>
+    <div class="card"><h3>Jurídico e contábil</h3><p class="muted">Ajuda a interpretar contratos, aditivos e a preparar representações ao TCE-PR e ao MP.</p></div>
+    <div class="card"><h3>Tecnologia e dados</h3><p class="muted">Melhora as verificações automáticas e o site. O código é aberto.</p></div>
+  </div>
+
+  <p><a class="btn" href={CONTATO.formulario_voluntarios} rel="noopener">Quero participar</a></p>
+
+  <h2>Compromissos de quem participa</h2>
+  <ul>
+    <li>Apartidarismo: analisamos fatos, independentemente de quem governa.</li>
+    <li>Rigor: toda afirmação tem fonte oficial verificável.</li>
+    <li>Respeito: não acusamos pessoas; descrevemos atos e pedimos explicações.</li>
+    <li>Sigilo: casos em análise não são divulgados fora da equipe.</li>
+  </ul>
+</Base>

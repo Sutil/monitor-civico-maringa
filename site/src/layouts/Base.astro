@@ -1,0 +1,48 @@
+---
+import '../styles/global.css';
+import resumo from '../data/resumo.json';
+import { url, data } from '../lib';
+
+interface Props { title?: string; description?: string; }
+const { title, description = 'Monitoramento cidadão e independente dos contratos públicos da Prefeitura e da Câmara de Maringá, com dados oficiais abertos.' } = Astro.props;
+const fullTitle = title ? `${title} · Monitor Cívico Maringá` : 'Monitor Cívico Maringá';
+const path = Astro.url.pathname;
+const links = [
+  ['', 'Painel'], ['casos/', 'Casos'], ['relatorios/', 'Relatórios'], ['metodologia/', 'Metodologia'],
+];
+const ativo = (p: string) => (p === '' ? path === url('') : path.startsWith(url(p)));
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
+  </head>
+  <body>
+    <header class="site">
+      <div class="wrap">
+        <a class="logo" href={url('')}>Monitor Cívico <span>Maringá</span></a>
+        <nav class="main" aria-label="Principal">
+          {links.map(([p, n]) => <a href={url(p)} aria-current={ativo(p) ? 'page' : undefined}>{n}</a>)}
+          <a class="cta" href={url('voluntarios/')}>Seja voluntário</a>
+        </nav>
+      </div>
+    </header>
+    <main class="wrap" data-pagefind-body>
+      <slot />
+    </main>
+    <footer class="site">
+      <div class="wrap">
+        <p><strong>Iniciativa cidadã, independente e apartidária.</strong> Todos os dados vêm de fontes oficiais públicas, com link para a origem.
+          Sinais automáticos são indícios para análise — <strong>não são acusações</strong>. Vale a presunção de inocência.
+          Encontrou um erro ou representa um órgão citado? <a href={url('metodologia/#correcoes')}>Solicite correção ou resposta</a>.</p>
+        <p>Dados atualizados em {data(resumo.gerado_em.slice(0, 10))} · Código aberto · <a href={url('metodologia/')}>Metodologia</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

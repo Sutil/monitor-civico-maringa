@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import casos from '../../data/casos.json';
+import regras from '../../data/regras.json';
+import { brl, data, url } from '../../lib';
+
+export function getStaticPaths() {
+  return casos.map((c: any) => ({ params: { id: c.caso_id }, props: { c } }));
+}
+const { c } = Astro.props as { c: any };
+const r = (regras as any)[c.regra];
+---
+<Base title={`Caso ${c.caso_id}`} description={`${c.regra_nome} — ${c.fornecedor}`}>
+  <p class="small"><a href={url('casos/')}>← Todos os casos</a></p>
+  <h1>{c.regra_nome}</h1>
+  <p><StatusBadge status={c.status} /> <span class="muted small">Caso {c.caso_id}{c.data_revisao && ` · revisado em ${data(c.data_revisao)}`}</span></p>
+
+  <div class="card">
+    <table>
+      <tbody>
+        <tr><th>Órgão</th><td>{c.orgao}</td></tr>
+        <tr><th>Fornecedor</th><td>{c.fornecedor} <span class="muted small">{c.fornecedor_doc}</span></td></tr>
+        <tr><th>Objeto</th><td>{c.objeto}</td></tr>
+        <tr><th>Valor</th><td>{brl(c.valor_global)}</td></tr>
+        <tr><th>Assinatura</th><td>{c.data_assinatura && data(c.data_assinatura)}</td></tr>
+        <tr><th>Contrato</th><td><a href={c.link_pncp} rel="noopener">{c.contrato} (PNCP)</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Fato verificado</h2>
+  <p>{c.fato}</p>
+  <h2>Análise do voluntário</h2>
+  <p>{c.justificativa}</p>
+  {c.protocolo && <p><strong>Protocolo:</strong> {c.protocolo}</p>}
+  {c.processo_link && <p><strong>Processo oficial:</strong> <a href={c.processo_link} rel="noopener">{c.processo_link}</a></p>}
+  <h2>Resposta do órgão</h2>
+  <p>{c.resposta_orgao || 'Ainda não recebida. O espaço está aberto para manifestação do órgão ou das pessoas citadas.'}</p>
+
+  {r && (<>
+    <h2>Por que verificamos isso</h2>
+    <p>{r.por_que}</p>
+  </>)}
+  <div class="notice"><small>Este caso descreve fatos de fontes oficiais e não afirma a ocorrência de irregularidade ou crime. Vale a presunção de inocência.
+    <a href={url('metodologia/#correcoes')}>Pedir correção ou enviar resposta</a>.</small></div>
+</Base>

@@ -1,0 +1,108 @@
+name: Coleta semanal e publicação
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"   # toda segunda, 03:00 em Brasília
+  workflow_dispatch:       # botão "Run workflow" para rodar manualmente
+
+permissions:
+  contents: write          # para registrar o histórico das rodadas
+  pages: write
+  id-token: write
+
+concurrency:
+  group: monitor
+  cancel-in-progress: false
+
+jobs:
+  coleta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements.txt
+
+      # Cache de dados brutos (CNPJ, detalhes PNCP, TSE processado) entre rodadas — nunca commitados
+      - uses: actions/cache@v4
+        with:
+          path: |
+            data/raw/cnpj
+            data/raw/pncp_detalhes
+            data/processed/*.parquet
+          key: dados-${{ github.run_id }}
+          restore-keys: dados-
+
+      - name: Expira caches antigos (pega aditivos e mudanças cadastrais)
+        run: |
+          mkdir -p data/raw/cnpj data/raw/pncp_detalhes/termos
+          find data/raw/pncp_detalhes/termos -name '*.json' -mtime +21 -delete
+          find data/raw/cnpj -name '*.json' -mtime +60 -delete
+
+      - name: TSE 2024 (só se não estiver em cache)
+        run: |
+          if [ ! -f data/processed/tse_doacoes_2024.parquet ]; then
+            mkdir -p data/raw/tse && cd data/raw/tse
+            curl -sSfLo p.zip https://cdn.tse.jus.br/estatistica/sead/odsele/prestacao_contas/prestacao_de_contas_eleitorais_candidatos_2024.zip
+            unzip -q p.zip receitas_candidatos_2024_PR.csv despesas_contratadas_candidatos_2024_PR.csv && rm p.zip
+            cd - && python scripts/processa_tse.py
+          fi
+
+      - name: Coleta PNCP
+        run: |
+          HOJE=$(date +%F)
+          python scripts/coleta_pncp.py 76282656000106 2025-01-01 $HOJE data/raw/contratos_prefeitura.json
+          python scripts/coleta_pncp.py 77926509000194 2025-01-01 $HOJE data/raw/contratos_camara.json
+
+      - name: Checagem de saúde das fontes
+        run: |
+          python - <<'PY'
+          import json, sys
+          n = len(json.load(open("data/raw/contratos_prefeitura.json")))
+          if n < 500:
+              sys.exit(f"Apenas {n} contratos da Prefeitura — fonte possivelmente fora do ar. Abortando sem publicar.")
+          print("ok", n)
+          PY
+
+      - name: Enriquecimento
+        run: |
+          python scripts/enriquece_cnpj.py data/raw/contratos_prefeitura.json data/raw/contratos_camara.json
+          python scripts/coleta_detalhes.py data/raw/contratos_prefeitura.json data/raw/contratos_camara.json
+
+      - name: Revisões da planilha → regras → novos sinais para a planilha
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          PLANILHA_ID: ${{ secrets.PLANILHA_ID }}
+        run: |
+          python scripts/sincroniza_planilha.py pull
+          python scripts/analisa.py
+          python scripts/sincroniza_planilha.py push
+
+      - name: Registra histórico da rodada (só contagens e IDs, sem detalhes)
+        run: |
+          git config user.name "monitor-bot"
+          git config user.email "monitor-bot@users.noreply.github.com"
+          git add data/processed/historico site/src/data
+          git commit -m "Rodada $(date +%F)" || echo "sem mudanças"
+          git push
+
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Build do site
+        working-directory: site
+        env:
+          SITE: https://${{ github.repository_owner }}.github.io
+          BASE: /${{ github.event.repository.name }}
+        run: npm ci && npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: site/dist }
+
+  deploy:
+    needs: coleta
+    runs-on: ubuntu-latest
+    environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
+    steps:
+      - id: d
+        uses: actions/deploy-pages@v4

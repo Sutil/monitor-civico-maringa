@@ -1,0 +1,9 @@
+# Dados brutos e privados NUNCA vão para o repositório público
+data/raw/
+data/privado/
+data/processed/*.parquet
+.venv/
+site/node_modules/
+site/dist/
+site/.astro/
+.DS_Store

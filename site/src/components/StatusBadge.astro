@@ -1,0 +1,6 @@
+---
+import { STATUS, type StatusId } from '../lib';
+const { status } = Astro.props as { status: StatusId };
+const s = STATUS[status] ?? STATUS.em_analise;
+---
+<span class={`badge b-${s.cor}`} title={s.desc}>{s.nome}</span>

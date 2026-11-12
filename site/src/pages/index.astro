@@ -1,0 +1,125 @@
+---
+import Base from '../layouts/Base.astro';
+import StatusBadge from '../components/StatusBadge.astro';
+import resumo from '../data/resumo.json';
+import { brl, mi, num, data, url, STATUS, type StatusId } from '../lib';
+
+const st = resumo.status as Record<string, number>;
+const emAnalise = st.em_analise ?? 0;
+const revisados = resumo.sinais_total - emAnalise;
+const ordemStatus: StatusId[] = ['em_analise', 'ponto_de_atencao', 'esclarecimento_solicitado', 'encaminhado', 'apuracao_oficial', 'esclarecido'];
+const meses = resumo.por_mes.map((m) => ({ ...m, valor_mi: m.valor / 1e6 }));
+const cats = resumo.por_categoria.map((c) => ({ ...c, valor_mi: c.valor / 1e6 }));
+---
+<Base>
+  <section class="hero">
+    <h1>Para onde vai o dinheiro público de Maringá?</h1>
+    <p>Acompanhamos, de forma automática e independente, os contratos da Prefeitura e da Câmara Municipal publicados no
+      Portal Nacional de Contratações Públicas, cruzando com dados da Receita Federal e do TSE.
+      Período analisado: {data(resumo.periodo.inicio)} a {data(resumo.periodo.fim)}.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card stat"><div class="v">{mi(resumo.valor_total)}</div><div class="l">em contratos analisados</div></div>
+    <div class="card stat"><div class="v">{num(resumo.contratos)}</div><div class="l">contratos</div></div>
+    <div class="card stat"><div class="v">{num(resumo.fornecedores)}</div><div class="l">fornecedores</div></div>
+    <div class="card stat"><div class="v">{num(resumo.sem_apontamentos)}</div><div class="l">contratos sem apontamentos</div></div>
+  </div>
+
+  <h2>Situação das análises</h2>
+  <p class="muted">As verificações automáticas geraram <strong>{num(resumo.sinais_total)} sinais</strong> em {num(resumo.contratos_com_sinal)} contratos.
+    Um sinal não é uma acusação: é um fato objetivo que pede verificação. Os detalhes só são publicados <strong>depois da revisão de um voluntário</strong>.</p>
+  <div class="card">
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Status</th><th>O que significa</th><th class="n">Casos</th></tr></thead>
+        <tbody>
+          {ordemStatus.map((s) => (
+            <tr><td><StatusBadge status={s} /></td><td class="muted small">{STATUS[s].desc}</td><td class="n">{num(st[s] ?? 0)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h2>Sinais por tipo de verificação</h2>
+  <div class="card">
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Verificação</th><th class="n">Sinais</th></tr></thead>
+        <tbody>
+          {resumo.sinais_por_regra.map((r) => (
+            <tr><td><a href={url(`metodologia/#${r.regra}`)}>{r.nome}</a></td><td class="n">{num(r.n)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {emAnalise > 0 && (
+    <div class="notice" style="margin-top:1.5rem">
+      <strong>{num(emAnalise)} casos aguardam revisão.</strong> Cada caso leva cerca de 20 minutos para ser verificado nas fontes oficiais.
+      Com mais voluntários, mais rápido a cidade tem respostas. <a href={url('voluntarios/')}>Quero ajudar →</a>
+    </div>
+  )}
+
+  <h2>Valor contratado por mês</h2>
+  <div class="card"><div class="chart" id="chart-mes" data-values={JSON.stringify(meses)}></div>
+    <p class="small muted">Em milhões de reais, pela data de assinatura. Contratos de grande valor (ex.: obras) concentram picos.</p></div>
+
+  <h2>Por categoria</h2>
+  <div class="card"><div class="chart" id="chart-cat" data-values={JSON.stringify(cats)}></div></div>
+
+  <h2>Maiores fornecedores</h2>
+  <div class="card">
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Fornecedor</th><th>CNPJ/CPF</th><th class="n">Contratos</th><th class="n">Valor</th></tr></thead>
+        <tbody>
+          {resumo.top_fornecedores.map((f) => (
+            <tr><td>{f.fornecedor}</td><td class="small muted">{f.doc}</td><td class="n">{f.n}</td><td class="n">{brl(f.valor)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="small muted">Lista apenas por valor contratado; não indica irregularidade.</p>
+  </div>
+
+  <h2>Por órgão</h2>
+  <div class="grid">
+    {resumo.por_orgao.map((o) => (
+      <div class="card stat"><div class="v">{mi(o.valor)}</div><div class="l">{o.orgao} · {num(o.n)} contratos</div></div>
+    ))}
+  </div>
+
+  <h2>Fontes</h2>
+  <ul>
+    {resumo.fontes.map((f) => <li><a href={f.url} rel="noopener">{f.nome}</a> — {f.uso} <span class="muted small">(atualizado em {data(f.atualizado)})</span></li>)}
+  </ul>
+</Base>
+
+<script>
+  import * as Plot from '@observablehq/plot';
+  const css = getComputedStyle(document.documentElement);
+  const brand = css.getPropertyValue('--brand').trim();
+  const fmt = (v: number) => v.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+  function render(id: string, make: (d: any[], w: number) => Element) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const d = JSON.parse(el.dataset.values || '[]');
+    const draw = () => { el.replaceChildren(make(d, el.clientWidth)); };
+    draw();
+    new ResizeObserver(draw).observe(el);
+  }
+  render('chart-mes', (d, w) => Plot.plot({
+    width: w, height: 260, marginLeft: 48, style: { background: 'transparent' },
+    x: { label: null, tickFormat: (m: string) => m.slice(5) === '01' ? m.slice(0, 4) : m.slice(5), type: 'band' },
+    y: { label: 'R$ mi', grid: true, tickFormat: fmt },
+    marks: [Plot.barY(d, { x: 'mes', y: 'valor_mi', fill: brand, tip: { format: { valor_mi: (v: number) => `R$ ${fmt(v)} mi` } } }), Plot.ruleY([0])],
+  }));
+  render('chart-cat', (d, w) => Plot.plot({
+    width: w, height: Math.max(180, d.length * 34), marginLeft: Math.min(170, w * 0.4), style: { background: 'transparent' },
+    x: { label: 'R$ mi', grid: true, tickFormat: fmt }, y: { label: null },
+    marks: [Plot.barX(d, { y: 'categoria', x: 'valor_mi', fill: brand, sort: { y: '-x' }, tip: true }), Plot.ruleX([0])],
+  }));
+</script>

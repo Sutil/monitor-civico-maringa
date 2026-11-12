@@ -1,0 +1,55 @@
+---
+import Base from '../layouts/Base.astro';
+import StatusBadge from '../components/StatusBadge.astro';
+import regras from '../data/regras.json';
+import resumo from '../data/resumo.json';
+import { brl, data, STATUS, type StatusId } from '../lib';
+import { CONTATO } from '../config';
+const lista = Object.entries(regras).filter(([k]) => !k.startsWith('_')) as [string, any][];
+const lim = (regras as any)._limite_dispensa;
+---
+<Base title="Metodologia" description="Como o Monitor Cívico Maringá coleta dados, gera sinais e revisa casos.">
+  <h1>Metodologia</h1>
+  <p>O monitor é totalmente automatizado na coleta e totalmente humano na conclusão. Um robô coleta dados oficiais toda semana e aplica verificações objetivas.
+    Cada sinal gerado é revisado por um voluntário antes de qualquer detalhe ser publicado.</p>
+
+  <h2>Como funciona</h2>
+  <ol>
+    <li><strong>Coleta semanal</strong> de contratos, licitações e aditivos no PNCP; dados cadastrais de fornecedores na Receita Federal; doações e despesas de campanha no TSE.</li>
+    <li><strong>Verificações automáticas</strong> (abaixo) geram sinais com status <em>Em análise</em>. Nesta fase, o público vê apenas a contagem.</li>
+    <li><strong>Revisão humana</strong>: um voluntário confere o fato nas fontes oficiais, registra a justificativa e muda o status.</li>
+    <li><strong>Contraditório</strong>: antes de publicar um <em>Ponto de atenção</em>, o órgão é consultado e sua resposta é publicada junto.</li>
+  </ol>
+
+  <h2>Verificações</h2>
+  {lista.map(([id, r]) => (
+    <div class="card" id={id} style="margin-bottom:1rem">
+      <h3>{r.nome}</h3>
+      <p>{r.desc}</p>
+      <p class="muted small"><strong>Por que importa:</strong> {r.por_que}</p>
+      <p class="muted small">Fontes: {r.fontes.join(', ')}</p>
+    </div>
+  ))}
+  <p class="small muted">Limites de dispensa por valor usados como referência: {brl(lim.obras)} (obras e serviços de engenharia) e {brl(lim.outros)} (demais), conforme Lei 14.133/2021, art. 75, atualizados por decreto.</p>
+
+  <h2>Status dos casos</h2>
+  <div class="card table-scroll"><table><tbody>
+    {(Object.keys(STATUS) as StatusId[]).map((s) => <tr><td><StatusBadge status={s} /></td><td>{STATUS[s].desc}</td></tr>)}
+  </tbody></table></div>
+
+  <h2>Privacidade (LGPD)</h2>
+  <p>Publicamos apenas dados já públicos e de interesse público. CPFs de pessoas físicas são sempre mascarados (ex.: ***.456.789-**).
+    Não classificamos pessoas — classificamos atos administrativos (contratos, licitações, aditivos).</p>
+
+  <h2>Limitações</h2>
+  <ul>
+    <li>Só analisamos o que o órgão publica no PNCP. Contratos não publicados ficam fora — e a ausência de publicação já é, por si, uma informação relevante.</li>
+    <li>Dados da Receita refletem a data da consulta, não necessariamente a da contratação.</li>
+    <li>O cruzamento com doadores usa CNPJ ou nome + dígitos parciais do CPF; homônimos com os mesmos dígitos são raros, mas possíveis — por isso a revisão humana é obrigatória.</li>
+  </ul>
+
+  <h2 id="correcoes">Correções e direito de resposta</h2>
+  <p>Erramos? Representa um órgão ou empresa citada? Escreva para <a href={`mailto:${CONTATO.email}`}>{CONTATO.email}</a>.
+    Respondemos em até 5 dias úteis e registramos toda correção com data.</p>
+  <p class="small muted">Última atualização dos dados: {data(resumo.gerado_em.slice(0, 10))}.</p>
+</Base>

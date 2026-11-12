@@ -1,0 +1,46 @@
+---
+import Base from '../../layouts/Base.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import casos from '../../data/casos.json';
+import resumo from '../../data/resumo.json';
+import { brl, num, data, url, STATUS, type StatusId } from '../../lib';
+const emAnalise = (resumo.status as Record<string, number>).em_analise ?? 0;
+const lista = [...casos].sort((a: any, b: any) => (b.data_revisao || '').localeCompare(a.data_revisao || ''));
+---
+<Base title="Casos" description="Casos revisados por voluntários do Monitor Cívico Maringá.">
+  <h1>Casos revisados</h1>
+  <p class="muted">Aqui aparecem apenas sinais que já passaram por revisão humana, com a justificativa do revisor e as fontes oficiais.
+    Neste momento, <strong>{num(emAnalise)} sinais aguardam revisão</strong> e não são exibidos.</p>
+
+  <div class="card" style="margin-bottom:1rem">
+    <strong>Legenda</strong>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem">
+      {(Object.keys(STATUS) as StatusId[]).map((s) => <StatusBadge status={s} />)}
+    </div>
+  </div>
+
+  {lista.length === 0 ? (
+    <div class="notice">
+      <p><strong>Ainda não há casos revisados publicados.</strong></p>
+      <p>O monitor acabou de começar. Os primeiros casos serão publicados assim que a equipe de voluntários concluir as revisões.</p>
+      <a class="btn" href={url('voluntarios/')}>Quero revisar casos</a>
+    </div>
+  ) : (
+    <div class="card table-scroll">
+      <table>
+        <thead><tr><th>Caso</th><th>Verificação</th><th>Fornecedor</th><th class="n">Valor</th><th>Status</th></tr></thead>
+        <tbody>
+          {lista.map((c: any) => (
+            <tr>
+              <td><a href={url(`casos/${c.caso_id}/`)}>{c.caso_id}</a><div class="small muted">{c.orgao}</div></td>
+              <td>{c.regra_nome}</td>
+              <td>{c.fornecedor}</td>
+              <td class="n">{brl(c.valor_global)}</td>
+              <td><StatusBadge status={c.status} /><div class="small muted">{c.data_revisao && data(c.data_revisao)}</div></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+</Base>

@@ -1,0 +1,364 @@
+{
+ "gerado_em": "2026-11-12T14:00",
+ "periodo": {
+  "inicio": "2024-12-03",
+  "fim": "2026-11-11"
+ },
+ "contratos": 1653,
+ "fornecedores": 1252,
+ "valor_total": 1722477786.95,
+ "por_orgao": [
+  {
+   "orgao": "Prefeitura de Maringá",
+   "n": 1589,
+   "valor": 1672401462.349994
+  },
+  {
+   "orgao": "Câmara Municipal de Maringá",
+   "n": 64,
+   "valor": 50076324.60000002
+  }
+ ],
+ "por_categoria": [
+  {
+   "categoria": "Serviços",
+   "valor": 883818954.0100002
+  },
+  {
+   "categoria": "Obras",
+   "valor": 468286344.45000005
+  },
+  {
+   "categoria": "Compras",
+   "valor": 226304499.3299999
+  },
+  {
+   "categoria": "Serviços de Saúde",
+   "valor": 87527424.11999965
+  },
+  {
+   "categoria": "Serviços de Engenharia",
+   "valor": 40950742.2
+  },
+  {
+   "categoria": "Locação Imóveis",
+   "valor": 10302627.42
+  },
+  {
+   "categoria": "Informática (TIC)",
+   "valor": 2695018.8099999996
+  },
+  {
+   "categoria": "Cessão",
+   "valor": 1978607.97
+  },
+  {
+   "categoria": "Mão de Obra",
+   "valor": 613568.64
+  }
+ ],
+ "por_mes": [
+  {
+   "mes": "2025-01",
+   "n": 52,
+   "valor": 22381323.71
+  },
+  {
+   "mes": "2025-02",
+   "n": 108,
+   "valor": 54950382.17000001
+  },
+  {
+   "mes": "2025-03",
+   "n": 84,
+   "valor": 7995768.19
+  },
+  {
+   "mes": "2025-04",
+   "n": 50,
+   "valor": 11286756.239999998
+  },
+  {
+   "mes": "2025-05",
+   "n": 34,
+   "valor": 6959974.33
+  },
+  {
+   "mes": "2025-06",
+   "n": 28,
+   "valor": 15102542.79
+  },
+  {
+   "mes": "2025-07",
+   "n": 62,
+   "valor": 74518164.94
+  },
+  {
+   "mes": "2025-08",
+   "n": 43,
+   "valor": 13756212.970000006
+  },
+  {
+   "mes": "2025-09",
+   "n": 39,
+   "valor": 8942388.919999998
+  },
+  {
+   "mes": "2025-10",
+   "n": 57,
+   "valor": 16326288.060000006
+  },
+  {
+   "mes": "2025-11",
+   "n": 100,
+   "valor": 280016556.55000037
+  },
+  {
+   "mes": "2025-12",
+   "n": 99,
+   "valor": 91684497.99
+  },
+  {
+   "mes": "2026-01",
+   "n": 18,
+   "valor": 99427872.09
+  },
+  {
+   "mes": "2026-02",
+   "n": 39,
+   "valor": 36740835.17
+  },
+  {
+   "mes": "2026-03",
+   "n": 93,
+   "valor": 108758909.4
+  },
+  {
+   "mes": "2026-04",
+   "n": 87,
+   "valor": 71417784.88999999
+  },
+  {
+   "mes": "2026-05",
+   "n": 92,
+   "valor": 23483720.28
+  },
+  {
+   "mes": "2026-06",
+   "n": 45,
+   "valor": 9797888.8
+  },
+  {
+   "mes": "2026-07",
+   "n": 115,
+   "valor": 24310281.53
+  },
+  {
+   "mes": "2026-08",
+   "n": 75,
+   "valor": 75514617.28999998
+  },
+  {
+   "mes": "2026-09",
+   "n": 64,
+   "valor": 479004870.02000004
+  },
+  {
+   "mes": "2026-10",
+   "n": 100,
+   "valor": 121474738.14
+  },
+  {
+   "mes": "2026-11",
+   "n": 19,
+   "valor": 13348194.08
+  }
+ ],
+ "por_modalidade": [
+  {
+   "modalidade": "Não informada",
+   "n": 1631,
+   "valor": 1719001984.399994
+  },
+  {
+   "modalidade": "Pregão - Eletrônico",
+   "n": 11,
+   "valor": 1954525.51
+  },
+  {
+   "modalidade": "Inexigibilidade",
+   "n": 4,
+   "valor": 1271736.98
+  },
+  {
+   "modalidade": "Dispensa",
+   "n": 4,
+   "valor": 239640.06
+  },
+  {
+   "modalidade": "Concurso",
+   "n": 3,
+   "valor": 9900.0
+  }
+ ],
+ "top_fornecedores": [
+  {
+   "fornecedor": "CONSTRUTORA TRIPOLONI LTDA",
+   "doc": "53503652000105",
+   "n": 1,
+   "valor": 442945902.86
+  },
+  {
+   "fornecedor": "LIGA ALVARO BAHIA CONTRA A MORTALIDADE INFANTIL",
+   "doc": "15170723000963",
+   "n": 5,
+   "valor": 227224804.6
+  },
+  {
+   "fornecedor": "ASSOCIAÇÃO BENEFICENTE BOM SAMARITANO",
+   "doc": "04792670000149",
+   "n": 7,
+   "valor": 81744114.52000001
+  },
+  {
+   "fornecedor": "PAVISERVICE ENGENHARIA E SERVIÇOS LTDA",
+   "doc": "03210810000160",
+   "n": 1,
+   "valor": 78064808.64
+  },
+  {
+   "fornecedor": "CONSORCIO PUBLICO INTERMUNICIPAL DE GESTAO DA AMUSEP - PROAMUSEP",
+   "doc": "17989386000109",
+   "n": 6,
+   "valor": 50042760.57
+  },
+  {
+   "fornecedor": "CONSORCIO PUBLICO INTERMUNICIPAL DE SAUDE DO SETENTRIAO PARANAENSE- CISAMUSEP",
+   "doc": "04956153000168",
+   "n": 4,
+   "valor": 49506298.54
+  },
+  {
+   "fornecedor": "INSTITUTO DE PROJETOS AVANCADOS PARA CIDADES, TECNOLOGIA E ADMINISTRACAO - INPACTA",
+   "doc": "63783232000183",
+   "n": 3,
+   "valor": 27526494.04
+  },
+  {
+   "fornecedor": "ELETROSINAL TECNOLOGIA EIRELI",
+   "doc": "03420234000186",
+   "n": 1,
+   "valor": 26532000.0
+  },
+  {
+   "fornecedor": "COMPASS SOLUCOES EM EDUCACAO E TECNOLOGIA LTDA",
+   "doc": "48398998000150",
+   "n": 2,
+   "valor": 18931070.6
+  },
+  {
+   "fornecedor": "EMPRESA BRASILEIRA DE CORREIOS E TELEGRAFOS",
+   "doc": "34028316002076",
+   "n": 2,
+   "valor": 18270000.0
+  },
+  {
+   "fornecedor": "HENDRIX SEGURANCA PRIVADA LTDA",
+   "doc": "43363345000112",
+   "n": 1,
+   "valor": 17799241.28
+  },
+  {
+   "fornecedor": "CONSTRUTORA FAIZ LTDA",
+   "doc": "07546200000193",
+   "n": 2,
+   "valor": 16792000.0
+  },
+  {
+   "fornecedor": "BRINK MOBIL EQUIPAMENTOS EDUCACIONAIS LTDA",
+   "doc": "79788766002771",
+   "n": 1,
+   "valor": 15270263.05
+  },
+  {
+   "fornecedor": "EXTRACON MINERACAO E OBRAS LTDA",
+   "doc": "02539384000140",
+   "n": 4,
+   "valor": 15126932.920000002
+  },
+  {
+   "fornecedor": "COMPANHIA DE SANEAMENTO DO PARANA-SANEPAR",
+   "doc": "76484013000145",
+   "n": 1,
+   "valor": 14190000.0
+  }
+ ],
+ "sinais_total": 201,
+ "contratos_com_sinal": 186,
+ "sem_apontamentos": 98,
+ "status": {
+  "em_analise": 201
+ },
+ "sinais_por_regra": [
+  {
+   "regra": "empresa_recente",
+   "nome": "Empresa recém-aberta",
+   "n": 0
+  },
+  {
+   "regra": "capital_incompativel",
+   "nome": "Capital social baixo para o contrato",
+   "n": 118
+  },
+  {
+   "regra": "situacao_irregular",
+   "nome": "CNPJ não ativo",
+   "n": 11
+  },
+  {
+   "regra": "doador_fornecedor",
+   "nome": "Doador de campanha contratado",
+   "n": 10
+  },
+  {
+   "regra": "candidato_socio",
+   "nome": "Candidato é sócio ou fornecedor",
+   "n": 0
+  },
+  {
+   "regra": "fornecedor_campanha",
+   "nome": "Fornecedor de campanha contratado",
+   "n": 32
+  },
+  {
+   "regra": "dispensa_fracionada",
+   "nome": "Possível fracionamento de dispensa",
+   "n": 0
+  },
+  {
+   "regra": "aditivo_acima_limite",
+   "nome": "Aditivos acima de 25%",
+   "n": 30
+  }
+ ],
+ "fontes": [
+  {
+   "nome": "PNCP — Portal Nacional de Contratações Públicas",
+   "url": "https://pncp.gov.br",
+   "atualizado": "2026-11-12",
+   "uso": "contratos, licitações e aditivos"
+  },
+  {
+   "nome": "Receita Federal — CNPJ (via minhareceita.org)",
+   "url": "https://minhareceita.org",
+   "atualizado": "2026-11-12",
+   "uso": "abertura, capital social, sócios e situação"
+  },
+  {
+   "nome": "TSE — Prestação de contas eleitorais 2024",
+   "url": "https://dadosabertos.tse.jus.br",
+   "atualizado": "2026-11-11",
+   "uso": "doações e despesas de campanha"
+  }
+ ]
+}
