@@ -54,8 +54,11 @@ Sugestão "provavel_falso_positivo" só quando a explicação legítima é quase
 
 
 def tem_credencial():
-    return bool(os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")
-                or (pathlib.Path.home() / ".config/anthropic").exists())
+    k = os.environ.get("ANTHROPIC_API_KEY", "")
+    if k and not k.startswith("sk-ant-"):
+        print("Aviso: o valor em ANTHROPIC_API_KEY não parece uma chave da Anthropic (deveria começar com sk-ant-).")
+        return False
+    return bool(k)
 
 
 def impressao(s):
@@ -105,6 +108,7 @@ def triar(client, s, regra, outros):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--max", type=int, default=300, help="limite de casos novos/alterados por rodada (custo)")
+    ap.add_argument("--ids", nargs="*", help="triar só estes caso_id (amostra para avaliação)")
     args = ap.parse_args()
 
     sinais_f = PRIV / "sinais.csv"
@@ -128,8 +132,9 @@ def main():
         print(f"{len(pendentes)} sinais aguardam triagem, mas não há credencial da Anthropic; pulando.")
     elif pendentes:
         import anthropic
-        client = anthropic.Anthropic()
-        lote = pendentes[: args.max]
+        # endereço fixo: ignora ANTHROPIC_BASE_URL/AUTH_TOKEN herdados de outras ferramentas
+        client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"), base_url="https://api.anthropic.com", auth_token=None)
+        lote = [s for s in pendentes if s["caso_id"] in set(args.ids)] if args.ids else pendentes[: args.max]
         print(f"Triagem por IA: {len(lote)} de {len(pendentes)} pendentes", flush=True)
         for i, s in enumerate(lote, 1):
             outros = [r for r in por_contrato[s["contrato"]] if r != s["regra_nome"]]
@@ -137,6 +142,12 @@ def main():
                 r = triar(client, s, regras.get(s["regra"], {}), outros)
             except anthropic.RateLimitError:
                 print("  limite de requisições; o restante fica para a próxima rodada", flush=True); break
+            except (anthropic.AuthenticationError, anthropic.PermissionDeniedError) as e:
+                print(f"  credencial recusada ({e.status_code}); triagem interrompida", flush=True); break
+            except anthropic.BadRequestError as e:
+                if "credit balance" in str(e):
+                    print("  sem créditos na conta da Anthropic; triagem interrompida", flush=True); break
+                print(f"  {s['caso_id']}: erro {e}; tenta na próxima rodada", flush=True); continue
             except (anthropic.APIConnectionError, anthropic.APIStatusError) as e:
                 print(f"  {s['caso_id']}: erro {e}; tenta na próxima rodada", flush=True); continue
             if r is None:
