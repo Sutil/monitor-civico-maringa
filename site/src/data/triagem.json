@@ -10,5 +10,6 @@
   "merece_revisao": 0,
   "provavel_falso_positivo": 0
  },
- "modelo": "claude-opus-5-5"
+ "modelo": "claude-opus-5-5",
+ "ativa": false
 }

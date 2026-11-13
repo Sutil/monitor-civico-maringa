@@ -173,6 +173,7 @@ def main():
         "prioridade": {p: cont("prioridade", p) for p in ("alta", "media", "baixa")},
         "sugestao": {s: cont("sugestao", s) for s in ("merece_revisao", "provavel_falso_positivo")},
         "modelo": MODELO,
+        "ativa": len(todos) > 0,  # site só fala em triagem por IA quando ela de fato rodou
     }
     (ROOT / "site/src/data/triagem.json").write_text(json.dumps(publico, ensure_ascii=False, indent=1))
     print(f"triados={publico['triados']} aguardando={publico['aguardando_triagem']} prioridade={publico['prioridade']}")
